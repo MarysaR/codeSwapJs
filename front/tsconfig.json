@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@logic/*": ["../logic/src/*"],
+      "@services/*": ["src/services/*"]
+    }
+  },
+  "include": ["src", "vite.config.ts", "src/App.vue", "main.ts"],
+  "types": ["vite/client"]
+}
