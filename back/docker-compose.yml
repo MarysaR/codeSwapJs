@@ -1,0 +1,12 @@
+version: "3"
+services:
+  db:
+    image: postgres:latest
+    container_name: codeswap_db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: codeswap
+    ports:
+      - "5433:5432"
