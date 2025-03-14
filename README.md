@@ -9,10 +9,10 @@
 - Comparer plusieurs implémentations pour trouver la meilleure approche.
   
 ### L'application repose sur une architecture modulaire avec :
-- Frontend (Vue.js) pour une interface moderne et intuitive.
-- Backend (Spring Boot) qui gère les utilisateurs, les projets et les requêtes API.
-- Logic (Node.js) qui assure le traitement des données et l'exécution de tests.
-- Base de données (MySQL) pour stocker les codes et retours.
+- **Frontend (Vue.js)** pour une interface moderne et intuitive.
+- **Backend (Node.js, Express)** qui gère les utilisateurs, les projets et les requêtes API.
+- **Logic (Node.js, Prisma)** qui assure le traitement des données et l'exécution de tests.
+- **Base de données (PostgreSQL)** pour stocker les codes et retours.
 
 ## À quoi sert CodeSwap ?
 
@@ -27,7 +27,7 @@ Un développeur peut poster un extrait de code et :
 - Ajouter des commentaires et suggestions sur un bout de code précis.
 - Visualiser les améliorations proposées avant de les valider.
 - Évaluation et notation
-- 
+  
 ### Chaque fragment de code peut être :
 - Noté selon son efficacité et sa clarté.
 - Comparé avec d’autres implémentations.
@@ -52,6 +52,7 @@ Un utilisateur soumet un code en spécifiant son langage.
 - Améliore la qualité du code avec des retours en temps réel
 - Automatise les tests et l’évaluation des snippets
 - Rend l’apprentissage du code plus interactif
+
 ---
 
 ## 1. Prérequis
@@ -60,7 +61,9 @@ Avant de lancer le projet avec Docker, assurez-vous d'avoir :
 
 ✅ **Docker installé** : [Télécharger Docker](https://www.docker.com/get-started)  
 ✅ **Docker Compose installé** (inclus dans Docker Desktop)  
-✅ **Git installé** : [Télécharger Git](https://git-scm.com/)
+✅ **Git installé** : [Télécharger Git](https://git-scm.com/)  
+✅ **Node.js installé** : [Télécharger Node.js](https://nodejs.org/)  
+✅ **Prisma installé** (dans `logic/`) : `npm install @prisma/client prisma`
 
 ---
 
@@ -79,7 +82,6 @@ cd CodeSwap
 
 ```bash
 docker-compose up --build
-
 ```
 
 ### Vérifier les conteneurs actifs
@@ -94,24 +96,23 @@ docker ps
 
 ```bash
 docker-compose down
-
 ```
 
 ### Supprimer toutes les images et conteneurs
 
 ```bash
 docker system prune -a
-
 ```
 
 ## 4. Accès aux Services
 
-    Backend (Spring Boot)	http://localhost:8080/
-    Frontend (Vue.js)	http://localhost:5173/
+    Backend (Node.js, Express)  http://localhost:3000/
+    Frontend (Vue.js)  http://localhost:5173/
 
 ## 5. Résumé
 
     ✅ Cloner le projet avec git clone
     ✅ Lancer les services avec docker-compose up --build
-    ✅ Accéder au backend (http://localhost:8080/) et frontend (http://localhost:5173/)
+    ✅ Accéder au backend (http://localhost:3000/) et frontend (http://localhost:5173/)
     ✅ Suivre les bonnes pratiques Git et Docker
+
