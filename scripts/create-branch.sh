@@ -1,5 +1,5 @@
 echo "Veuillez choisir un type de branche :"
-echo "1) feature"
+echo "1) feat"
 echo "2) fix"
 echo "3) chore"
 echo "4) refacto"
@@ -7,7 +7,7 @@ echo "5) test"
 read -p "Entrez le numéro correspondant : " TYPE_CHOICE
 
 case $TYPE_CHOICE in
-    1) BRANCH_TYPE="feature" ;;
+    1) BRANCH_TYPE="feat" ;;
     2) BRANCH_TYPE="fix" ;;
     3) BRANCH_TYPE="chore" ;;
     4) BRANCH_TYPE="refacto" ;;

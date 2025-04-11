@@ -15,22 +15,23 @@ jobs:
       - name: Vérifier si la branche respecte la convention de nommage
         run: |
           BRANCH_NAME="${{ github.ref_name }}"
+          PATTERN="^(feat|fix|chore|refacto|test)/"
 
-          # 🚨 Interdit les pushs directs sur 'main'
+          # Interdit les pushs directs sur 'main'
           if [[ "$BRANCH_NAME" == "main" ]]; then
             echo "❌ Erreur : Les pushs directs sur 'main' sont interdits !"
             exit 1
           fi
 
-          # 🚨 Autoriser 'develop' uniquement via PR
+          # Autoriser 'develop' uniquement via PR
           if [[ "$BRANCH_NAME" == "develop" ]]; then
             echo "⚠️ Attention : Les pushs sur 'develop' sont autorisés, mais doivent être validés via une Pull Request."
             exit 0
           fi
 
-          # ✅ Vérifier que le nom de la branche respecte la convention
-          if [[ ! "$BRANCH_NAME" =~ ^(feature|fix|chore|refacto|test)/ ]]; then
-            echo "❌ Erreur : Le nom de la branche doit commencer par 'feature/', 'fix/', 'chore/', 'refacto/' ou 'test'."
+          # Vérifie le nom de la branche
+          if [[ ! "$BRANCH_NAME" =~ $PATTERN ]]; then
+            echo "❌ Erreur : Le nom de la branche doit commencer par 'feat/', 'fix/', 'chore/', 'refacto/' ou 'test/'."
             exit 1
           fi
 

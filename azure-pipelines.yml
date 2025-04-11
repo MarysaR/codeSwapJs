@@ -1,0 +1,83 @@
+trigger:
+  branches:
+    include:
+      - develop
+      - main
+      - feat/*
+      - fix/*
+      - chore/*
+      - test/*
+      - refacto/*
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  node_version: "20"
+  database_url: "$(DATABASE_URL)"
+
+steps:
+  - task: UseNode@1
+    inputs:
+      version: "$(node_version)"
+    displayName: "Use Node.js $(node_version)"
+
+  - script: |
+      cd Logic
+      npm install
+    displayName: "Install Logic dependencies"
+
+  - script: |
+      cd front
+      npm install
+    displayName: "Install frontend dependencies"
+
+  - script: |
+      cd App
+      npm install
+    displayName: "Install App dependencies"
+
+  # Démarrage de PostgreSQL
+  - task: DockerInstaller@0
+    displayName: "Install Docker"
+
+  - script: |
+      docker run -d \
+        --name postgres-db \
+        -e POSTGRES_USER=postgres \
+        -e POSTGRES_PASSWORD=postgres \
+        -e POSTGRES_DB=codeswap_test \
+        -p 5432:5432 \
+        postgres:14
+    displayName: "Run PostgreSQL in Docker"
+
+  - script: |
+      echo "Waiting for PostgreSQL to be ready..."
+      for i in {1..15}; do
+        pg_isready -h localhost -p 5432 && break
+        sleep 2
+      done
+    displayName: "Wait for PostgreSQL to be ready"
+
+  - script: |
+      cd Logic
+      export DATABASE_URL=$(database_url)
+      npx prisma generate
+      npx prisma migrate deploy
+    displayName: "Apply Prisma migrations"
+
+  - script: |
+      cd Logic
+      export DATABASE_URL=$(database_url)
+      npm run test
+    displayName: "Run Logic tests (with DB)"
+
+  - script: |
+      cd front
+      npm run build
+    displayName: "Build frontend (Vue.js)"
+
+  - script: |
+      cd App
+      npm run build
+    displayName: "Build backend (Node.js)"

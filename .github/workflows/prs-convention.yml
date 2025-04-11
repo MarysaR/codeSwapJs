@@ -13,9 +13,10 @@ jobs:
       - name: Vérifier si la branche source respecte les conventions de nommage
         run: |
           BRANCH_NAME="${{ github.head_ref }}"
+          PATTERN="^(feat|chore|fix|refacto|test)/"
 
-          if [[ ! "$BRANCH_NAME" =~ ^(feature|chore|fix|refacto)/ ]]; then
-            echo "❌ Erreur : Seules les branches 'feature/', 'chore/', 'fix/', 'refacto/' et 'test/' peuvent ouvrir une PR vers 'develop'."
+          if [[ ! "$BRANCH_NAME" =~ $PATTERN ]]; then
+            echo "❌ Erreur : Seules les branches 'feat/', 'chore/', 'fix/', 'refacto/' et 'test/' peuvent ouvrir une PR vers 'develop'."
             exit 1
           fi
 

@@ -13,3 +13,5 @@ pnpm-debug.log*
 
 # Fichiers environnement
 .env
+
+package-lock.json
