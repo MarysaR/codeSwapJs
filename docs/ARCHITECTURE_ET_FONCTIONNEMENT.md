@@ -1,14 +1,14 @@
-# Documentation : Communication entre Backend, Logic et Frontend
+# 📘 Documentation : Communication entre Backend, Logic et Frontend
 
 ## 1. Vue d’ensemble
 
 Le projet suit une architecture en trois couches distinctes, chacune ayant un rôle précis :
 
-    Backend (Express.js, Node.js) : API REST qui gère les requêtes du Frontend et appelle Logic pour le traitement des données.
-    Logic (Node.js, TypeScript) : Service indépendant qui effectue des transformations de données demandées par le Backend.
-    Frontend (Vue.js, Vite) : Affiche l’interface utilisateur et envoie des requêtes HTTP au Backend.
+- **Backend** (Express.js, Node.js) : API REST qui gère les requêtes du Frontend et appelle `Logic` pour le traitement des données.
+- **Logic** (Node.js, TypeScript, Prisma ORM) : Service indépendant qui effectue des transformations de données demandées par le Backend.
+- **Frontend** (Vue.js, Vite) : Affiche l’interface utilisateur et envoie des requêtes HTTP au Backend.
 
-Chaque couche communique via des requêtes HTTP et fonctionne indépendamment, garantissant une séparation des responsabilités claire (SoC).
+Chaque couche communique via des requêtes HTTP et fonctionne indépendamment, garantissant une **architecture hexagonale modulaire (Clean Architecture)**.
 
 ---
 
@@ -16,99 +16,96 @@ Chaque couche communique via des requêtes HTTP et fonctionne indépendamment, g
 
 ### 1. L'utilisateur interagit avec **Frontend**
 
-- L’utilisateur accède à http://localhost:5173/ (port 5173).
-- Le Frontend affiche une page et envoie une requête fetch() au Backend (http://localhost:3333/api/test).
+- L’utilisateur accède à `http://localhost:5173/`.
+- Le Frontend affiche une page et envoie une requête `fetch()` au Backend vers `http://localhost:3300/users`.
 
 ### 2. **Communication Frontend → Backend**
 
-- Le Frontend envoie une requête HTTP GET /api/test au Backend (Express.js).
-- Le **Backend** reçoit cette requête et doit traiter une donnée via `Logic`.
+- Le Frontend envoie une requête HTTP `GET /users` au Backend (Express.js).
+- Le **Backend** intercepte cette requête et déclenche le UseCase `GetAllUsersUseCase` via `Logic`.
 
 ### 3. **Communication Backend → Logic**
 
-- **Le Backend ne traite pas lui-même la donnée.**
-- Il envoie une requête GET http://localhost:3333/api/test pour exécuter une logique métier via Logic.
-- Le **service Logic** reçoit la requête et génère une réponse en JSON.
+- Le Backend **n’implémente pas directement la logique de pagination ou de récupération**.
+- Il instancie `PrismaUserRepository` depuis `Logic`, qui lui-même utilise Prisma pour interagir avec la base de données.
+- Il exécute ensuite le `GetAllUsersUseCase` avec les paramètres de pagination.
 
 ### 4. **Logic répond au Backend**
 
-- Logic répond avec une réponse JSON :
+- Le UseCase retourne une liste d’utilisateurs paginée :
+
   ```json
-  { "message": "Communication entre `back` et `logic` OK !" }
+  {
+    "result": [ ... ],
+    "totalRecord": 42
+  }
   ```
-- **Le Backend récupère cette réponse et la renvoie au Frontend.**
+
+  **Le Backend encapsule cette réponse et la renvoie à l’interface utilisateur.**
 
 ### 5. **Backend → Frontend**
 
-- Backend retourne `"Communication entre `back`et`logic` OK !"` à Frontend, qui l'affiche à l’écran.
+    Backend retourne la liste paginée à Frontend, qui l’affiche dynamiquement.
 
 ---
 
 ## 3. Schéma du cheminement
 
-Représentation simplifiée du fonctionnement :
+**Utilisateur ⇄ Frontend (Vue.js) ⇄ Backend (Express.js) ⇄ Logic (Node.js)**
 
-```
-Utilisateur ⇄ Frontend (Vue.js) ⇄ Backend (Express.js) ⇄ Logic (Node.js)
-```
+    Frontend envoie une requête à http://localhost:3300/users?pageSize=10&pageStart=0&sortOrder=1.
 
-1. **L’utilisateur accède à frontend** (`http://localhost:5173/`).
-2. **Frontend envoie une requête** à Backend (`http://localhost:3333/api/test`).
-3. **Backend appelle Logic**
-4. **Logic traite et renvoie la donnée** (`{ "message": "Communication entre backetlogic OK !" }`).
-5. **Backend retourne "Communication entre `back` et `logic` OK !" à Frontend**, qui l’affiche sur la page.
+    Backend utilise un UseCase défini dans logic/ pour récupérer les utilisateurs.
+
+    Logic traite via Prisma et renvoie les résultats.
+
+    Backend envoie les utilisateurs paginés au Frontend.
 
 ---
 
 ## 4. Exemple de requêtes
 
-### Requête envoyée par **Frontend** au **Backend**
+**Requête envoyée par Frontend au Backend**
 
-```javascript
-fetch("http://localhost:3333/api/test")
-  .then((response) => response.json())
-  .then((data) => console.log("Réponse du backend:", data.message));
+```js
+fetch("http://localhost:3300/users?pageSize=10&pageStart=0&sortOrder=1")
+  .then((res) => res.json())
+  .then((data) => {
+    console.log("Utilisateurs :", data.payload.result);
+    console.log("Total :", data.payload.totalRecord);
+  });
 ```
 
-### Requête Requête exécutée par le **Backend**
+**Requête exécutée par le Backend**
 
-```typescript
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
+    Récupère les paramètres pageSize, pageStart, sortOrder
 
-dotenv.config();
-const app = express();
+    Instancie un PrismaUserRepository et exécute GetAllUsersUseCase
 
-app.use(cors());
-app.use(express.json());
+    Retourne la liste paginée des utilisateurs
 
-app.get("/api/test", (req, res) => {
-  const message = { message: "Communication entre `back` et `logic` OK !" };
-  res.json(message);
-});
-
-app.listen(3333, () => {
-  console.log("Server running on port 3333");
-});
-"
-```
-
-### Réponse de **Logic**
+**Réponse générée par Logic**
 
 ```json
-{ "message": "Communication entre `back` et `logic` OK !" }
+{
+  "payload": {
+    "result": [
+      {
+        "id": "uuid1",
+        "email": "user@example.com",
+        "createdAt": "2025-04-10T10:00:00Z",
+        "role": "ADMIN"
+      }
+    ],
+    "totalRecord": 42
+  }
+}
 ```
-
----
 
 ## 5. Résumé
 
-✔ **Frontend envoie une requête à Backend** (`http://localhost:3333/api/test`).  
-✔ **Backend demande un traitement à Logic**.
-✔ **Logic traite et renvoie la donnée (`"Communication entre back et logic OK !"`).**  
-✔ **Backend retourne `"HELLO"` à Frontend, qui l'affiche.**
-
-![alt text](pictures/com-back-logic-front.png)
-![alt text](pictures/com-back-logic-front1.png)
-![alt text](pictures/com-back-logic.png)
+✔ Le Frontend appelle GET /users
+✔ Le Backend délègue à Logic via un UseCase.
+✔ Logic exécute la requête Prisma et retourne le résultat.
+✔ Le Backend répond au Frontend avec les données formatées.
+✔ Le Frontend affiche la liste paginée d’utilisateurs.
