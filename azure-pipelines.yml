@@ -14,7 +14,7 @@ pool:
 
 variables:
   node_version: "20"
-  database_url: "$(DATABASE_URL)""
+  database_url: "$(DATABASE_URL)"
 
 steps:
   - task: UseNode@1
