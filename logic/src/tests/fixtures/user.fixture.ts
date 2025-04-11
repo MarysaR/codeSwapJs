@@ -1,7 +1,8 @@
 import { User } from "@prisma/client";
 import { Result } from "../../errors/resultError";
 import { TempUserRepository } from "../../interfaces/tempRepositories/tempUserRepository";
-import { GetUserUseCase } from "../../useCases/getUsersUseCase";
+import { GetUsersUseCase } from "../../useCases/getUsersUseCase";
+
 import {
   GetUsersFilters,
   GetUsersReturn,
@@ -12,7 +13,7 @@ import {
  */
 export const createUserFixture = () => {
   const tempUserRepository = new TempUserRepository();
-  const getUsersUseCase = new GetUserUseCase(tempUserRepository);
+  const getUsersUseCase = new GetUsersUseCase(tempUserRepository);
 
   return {
     reset() {

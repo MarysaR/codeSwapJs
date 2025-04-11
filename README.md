@@ -85,6 +85,7 @@ Pour récupérer le projet sur votre machine, exécutez :
 ```bash
 git clone https://github.com/VOTRE_UTILISATEUR/CodeSwap.git
 cd CodeSwap
+
 ```
 
 ---
@@ -126,3 +127,12 @@ docker system prune -a
     Lancer les services avec docker-compose up --build
     Accéder au backend (http://localhost:3000/) et frontend (http://localhost:5173/)
     Suivre les bonnes pratiques Git et Docker
+
+⚠️ Prisma & Docker Alpine
+
+Prisma génère par défaut un client pour Debian. Or, l’image Docker `node:lts-alpine` utilise `musl`.
+
+Pour éviter toute erreur au runtime :
+
+- Ajoutez `binaryTargets = ["native", "linux-musl-openssl-3.0.x"]` dans `schema.prisma`
+- Exécutez `npx prisma generate` **dans le Dockerfile**, et non localement.

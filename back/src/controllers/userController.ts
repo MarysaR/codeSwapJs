@@ -1,9 +1,5 @@
 import { Request, Response } from "express";
-import {
-  GetAllUsersUseCase as GetUsersUseCase,
-  prisma,
-  PrismaUserRepository,
-} from "logic";
+import { GetUsersUseCase, prisma, PrismaUserRepository } from "logic";
 import { HTTP_STATUS } from "../constants/httpStatus";
 import {
   sendErrorResponse,

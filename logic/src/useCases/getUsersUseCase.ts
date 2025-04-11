@@ -12,7 +12,7 @@ import { Result } from "../errors/resultError";
  * récupérer tous les utilisateurs, avec prise en charge
  * optionnelle du tri et de la pagination.
  */
-export class GetUserUseCase {
+export class GetUsersUseCase {
   /**
    * Crée une instance du cas d’usage avec un repository injecté.
    * @param userRepository Instance d’un `UserRepository`
