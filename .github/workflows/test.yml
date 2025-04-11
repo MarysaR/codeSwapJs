@@ -7,8 +7,8 @@ on:
     branches: [develop, main]
 
 jobs:
-  logic-tests:
-    name: Run tests in logic/
+  test:
+    name: test
     runs-on: ubuntu-latest
 
     defaults:
