@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { testLogic } from "../controllers/testController";
+import userRoutes from "./user-routes";
 
 const router = Router();
 
-router.get("/test", testLogic);
+router.use(userRoutes);
 
 export default router;
