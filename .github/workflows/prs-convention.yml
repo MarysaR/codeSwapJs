@@ -14,8 +14,8 @@ jobs:
         run: |
           BRANCH_NAME="${{ github.head_ref }}"
 
-          if [[ ! "$BRANCH_NAME" =~ ^(feature|chore|fix|refacto)/ ]]; then
-            echo "❌ Erreur : Seules les branches 'feature/', 'chore/', 'fix/', 'refacto/' et 'test/' peuvent ouvrir une PR vers 'develop'."
+          if [[ ! "$BRANCH_NAME" =~ ^(feat|chore|fix|refacto)/ ]]; then
+            echo "❌ Erreur : Seules les branches 'feat/', 'chore/', 'fix/', 'refacto/' et 'test/' peuvent ouvrir une PR vers 'develop'."
             exit 1
           fi
 

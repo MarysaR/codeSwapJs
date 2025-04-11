@@ -29,8 +29,8 @@ jobs:
           fi
 
           # ✅ Vérifier que le nom de la branche respecte la convention
-          if [[ ! "$BRANCH_NAME" =~ ^(feature|fix|chore|refacto|test)/ ]]; then
-            echo "❌ Erreur : Le nom de la branche doit commencer par 'feature/', 'fix/', 'chore/', 'refacto/' ou 'test'."
+          if [[ ! "$BRANCH_NAME" =~ ^(feat|fix|chore|refacto|test)/ ]]; then
+            echo "❌ Erreur : Le nom de la branche doit commencer par 'feat/', 'fix/', 'chore/', 'refacto/' ou 'test'."
             exit 1
           fi
 
