@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite --config src/vite.config.ts",
-    "build": "vite build --config src/vite.config.ts"
+    "build": "vite build --config src/vite.config.ts",
+    "preview": "vite preview"
   },
   "keywords": [],
   "author": "",
